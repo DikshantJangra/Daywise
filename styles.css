@@ -6,3 +6,12 @@ available in the app when your plugin is enabled.
 If your plugin does not need CSS, delete this file.
 
 */
+
+/* Daily Summary (Gemini) styles */
+.markdown-preview-view h3:has(span.daily-summary-header) {
+	color: var(--text-accent);
+}
+
+.daily-summary-header {
+	font-weight: 600;
+}
