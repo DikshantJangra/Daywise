@@ -27,11 +27,13 @@ The following example demonstrates how Daywise transforms a freeform log into a 
 Input (freeform):
 
 ```
-Awake at 7:30
-Classes till 3:30 PM
-In Library till 5:20 PM - Arranged ARC browser tabs! [2hrs]!!!
-Then went to mess
-Then in room rn at 7 PM
+Awake at 7:30 AM
+Classes from 8:00 AM to 3:30 PM — DSA, DBMS, ADA, AP, Maths
+In Library from 3:30 PM to 5:20 PM — Arranged ARC browser tabs
+Short break walking to mess after 5:20 PM
+Dinner at mess from 5:45 PM to 6:30 PM
+Return to room from 6:30 PM to 7:00 PM
+In room at 7:00 PM
 ```
 
 Parsing notes:
