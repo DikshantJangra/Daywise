@@ -1,10 +1,11 @@
 {
-	"id": "daily-summary-gemini",
+	"id": "daywise",
 	"name": "Daywise",
 	"version": "1.0.0",
-	"minAppVersion": "0.15.0",
-	"description": "Generate a structured daily summary from freeform notes.",
+	"minAppVersion": "0.1.0",
+	"description": "Generate structured daily logs and organize your freeform notes effortlessly.",
 	"author": "Dikshant Jangra",
+	"repo": "https://github.com/DikshantJangra/Daywise.git",
 	"authorUrl": "https://github.com/dikshantjangra/",
 	"isDesktopOnly": false
 }
