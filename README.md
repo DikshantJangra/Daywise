@@ -1,94 +1,162 @@
-# Obsidian Sample Plugin
+# Daywise – Structure Your Daily Notes in Obsidian
 
-This is a sample plugin for Obsidian (https://obsidian.md).
+Daywise is an open‑source Obsidian plugin that converts freeform daily notes into a consistent, readable Markdown table. It supports two providers:
 
-This project uses TypeScript to provide type checking and documentation.
-The repo depends on the latest plugin API (obsidian.d.ts) in TypeScript Definition format, which contains TSDoc comments describing what it does.
+- Local: an offline parser requiring no API key
+- Gemini: higher‑quality formatting via Google Generative Language API (user‑supplied API key)
 
-This sample plugin demonstrates some of the basic functionality the plugin API can do.
-- Adds a ribbon icon, which shows a Notice when clicked.
-- Adds a command "Open Sample Modal" which opens a Modal.
-- Adds a plugin setting tab to the settings page.
-- Registers a global click event and output 'click' to the console.
-- Registers a global interval which logs 'setInterval' to the console.
+The plugin is designed for users who keep daily logs for journaling, time tracking, or productivity and want a structured summary without changing how they write.
 
-## First time developing plugins?
+---
 
-Quick starting guide for new plugin devs:
+## Features
 
-- Check if [someone already developed a plugin for what you want](https://obsidian.md/plugins)! There might be an existing plugin similar enough that you can partner up with.
-- Make a copy of this repo as a template with the "Use this template" button (login to GitHub if you don't see it).
-- Clone your repo to a local development folder. For convenience, you can place this folder in your `.obsidian/plugins/your-plugin-name` folder.
-- Install NodeJS, then run `npm i` in the command line under your repo folder.
-- Run `npm run dev` to compile your plugin from `main.ts` to `main.js`.
-- Make changes to `main.ts` (or create new `.ts` files). Those changes should be automatically compiled into `main.js`.
-- Reload Obsidian to load the new version of your plugin.
-- Enable plugin in settings window.
-- For updates to the Obsidian API run `npm update` in the command line under your repo folder.
+- Convert unstructured logs into a Markdown table: `Time | Activity | Notes`
+- Detect times, time ranges (e.g., “till 5:20 PM”), and simple durations (e.g., `[2hrs]`)
+- Two processing modes: Local (offline) or Gemini (cloud)
+- Append the generated summary to the end of the current note
+- Configurable header before the summary
+- Clear error messages and retry handling for transient Gemini API errors
 
-## Releasing new releases
+---
 
-- Update your `manifest.json` with your new version number, such as `1.0.1`, and the minimum Obsidian version required for your latest release.
-- Update your `versions.json` file with `"new-plugin-version": "minimum-obsidian-version"` so older versions of Obsidian can download an older version of your plugin that's compatible.
-- Create new GitHub release using your new version number as the "Tag version". Use the exact version number, don't include a prefix `v`. See here for an example: https://github.com/obsidianmd/obsidian-sample-plugin/releases
-- Upload the files `manifest.json`, `main.js`, `styles.css` as binary attachments. Note: The manifest.json file must be in two places, first the root path of your repository and also in the release.
-- Publish the release.
+## Example
 
-> You can simplify the version bump process by running `npm version patch`, `npm version minor` or `npm version major` after updating `minAppVersion` manually in `manifest.json`.
-> The command will bump version in `manifest.json` and `package.json`, and add the entry for the new version to `versions.json`
+Input (freeform):
 
-## Adding your plugin to the community plugin list
-
-- Check the [plugin guidelines](https://docs.obsidian.md/Plugins/Releasing/Plugin+guidelines).
-- Publish an initial version.
-- Make sure you have a `README.md` file in the root of your repo.
-- Make a pull request at https://github.com/obsidianmd/obsidian-releases to add your plugin.
-
-## How to use
-
-- Clone this repo.
-- Make sure your NodeJS is at least v16 (`node --version`).
-- `npm i` or `yarn` to install dependencies.
-- `npm run dev` to start compilation in watch mode.
-
-## Manually installing the plugin
-
-- Copy over `main.js`, `styles.css`, `manifest.json` to your vault `VaultFolder/.obsidian/plugins/your-plugin-id/`.
-
-## Improve code quality with eslint (optional)
-- [ESLint](https://eslint.org/) is a tool that analyzes your code to quickly find problems. You can run ESLint against your plugin to find common bugs and ways to improve your code. 
-- To use eslint with this project, make sure to install eslint from terminal:
-  - `npm install -g eslint`
-- To use eslint to analyze this project use this command:
-  - `eslint main.ts`
-  - eslint will then create a report with suggestions for code improvement by file and line number.
-- If your source code is in a folder, such as `src`, you can use eslint with this command to analyze all files in that folder:
-  - `eslint ./src/`
-
-## Funding URL
-
-You can include funding URLs where people who use your plugin can financially support it.
-
-The simple way is to set the `fundingUrl` field to your link in your `manifest.json` file:
-
-```json
-{
-    "fundingUrl": "https://buymeacoffee.com"
-}
+```
+Awake at 7:30
+Classes till 3:30 PM
+In Library till 5:20 PM - Arranged ARC browser tabs! [2hrs]!!!
+Then went to mess
+Then in room rn at 7 PM
 ```
 
-If you have multiple URLs, you can also do:
+Output (generated summary appended to the note):
 
-```json
-{
-    "fundingUrl": {
-        "Buy Me a Coffee": "https://buymeacoffee.com",
-        "GitHub Sponsor": "https://github.com/sponsors",
-        "Patreon": "https://www.patreon.com/"
-    }
-}
+```markdown
+---
+### Daily Summary
+
+| Time        | Activity         | Notes                     |
+|-------------|------------------|---------------------------|
+| 7:30 AM     | Wake Up          | -                         |
+| 8:00–3:30 PM| Classes          | -                         |
+| 3:30–5:20 PM| Library          | Arranged ARC browser tabs |
+| 5:30 PM     | Dinner (Mess)    | -                         |
+| 7:00 PM     | In Room          | -                         |
 ```
 
-## API Documentation
+---
 
-See https://github.com/obsidianmd/obsidian-api
+## Installation
+
+### Method 1: Manual
+
+1. Download or clone this repository.
+2. In the plugin folder, install dependencies:
+   ```bash
+   npm install
+   ```
+3. Build the plugin:
+   ```bash
+   npm run build
+   ```
+4. Copy the following files to your vault:
+   ```
+   <your-vault>/.obsidian/plugins/daywise/
+   ├── main.js
+   ├── manifest.json
+   └── styles.css
+   ```
+5. Enable Daywise in Obsidian → Settings → Community Plugins.
+
+### Method 2: Development
+
+If you want hot‑reload during development:
+
+```bash
+npm install
+npm run dev
+```
+
+Load the plugin as a development plugin from your local folder. Obsidian will rebuild and reload on file changes.
+
+---
+
+## Usage
+
+1. Open a daily note containing raw, freeform entries.
+2. Run the command: “Generate Daily Summary from Note”.
+3. A summary table is appended at the end of the note. You can optionally include a header via settings.
+
+---
+
+## Settings
+
+- Provider: Local or Gemini
+- Gemini API Key: Your key from Google AI Studio (required only for Gemini)
+- Model: Defaults to `gemini-1.5-flash`. You can set another available model
+- Add header before table: Toggle whether to insert a “Daily Summary” heading before the output
+
+Notes:
+- Local mode works offline and requires no configuration.
+- Gemini mode sends the note content to Google’s Generative Language API over HTTPS.
+
+---
+
+## Providers
+
+### Local (offline)
+- Heuristic parser for common patterns in daily logs
+- Detects times, ranges (“till / to”), and bracketed durations (e.g., `[2hrs]`)
+- Produces a Markdown table immediately on‑device
+
+### Gemini (cloud)
+- Endpoint: `https://generativelanguage.googleapis.com/v1/models/{model}:generateContent`
+- Requires your own API key from Google AI Studio
+- Retries on 429/503, surfaces HTTP and safety‑block errors in Obsidian notices
+
+---
+
+## Privacy
+
+- Local provider: no network calls; all processing occurs locally.
+- Gemini provider: note content is sent to Google’s API via HTTPS. Your API key is stored locally in your vault. No analytics or telemetry are collected by this plugin.
+
+---
+
+## Project Structure
+
+```
+my-daily-summary-plugin/
+├── main.ts              # Plugin logic (command, settings, providers, local fallback)
+├── manifest.json        # Obsidian plugin manifest
+├── styles.css           # Optional styling
+├── esbuild.config.mjs   # Bundler configuration
+├── package.json         # Build and dependency config
+├── tsconfig.json        # TypeScript config
+└── README.md            # This file
+```
+
+---
+
+## Contributing
+
+Contributions are welcome. To work on the plugin:
+
+1. Fork the repository
+2. Create a feature branch
+3. Ensure the plugin builds successfully:
+   ```bash
+   npm run build
+   ```
+4. Open a pull request with a clear description of the change
+
+Please review the Obsidian plugin development documentation and follow TypeScript best practices.
+
+---
+
+## License
+
+This project is licensed under the MIT License.
