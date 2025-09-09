@@ -22,6 +22,8 @@ The plugin is designed for users who keep daily logs for journaling, time tracki
 
 ## Example
 
+The following example demonstrates how Daywise transforms a freeform log into a structured table and explains the parsing decisions.
+
 Input (freeform):
 
 ```
@@ -32,20 +34,35 @@ Then went to mess
 Then in room rn at 7 PM
 ```
 
-Output (generated summary appended to the note):
+Parsing notes:
+- "Awake at 7:30" → single time detected (7:30). Normalized to 7:30 AM. Activity inferred as Wake Up.
+- "Classes till 3:30 PM" → an end time is present without an explicit start. Local mode infers an approximate school day start (8:00) when missing. Gemini mode may infer or leave blank based on context.
+- "In Library till 5:20 PM - Arranged ARC browser tabs! [2hrs]!!!" → end time present; start time inferred by the bracketed duration `[2hrs]` → 3:20 PM to 5:20 PM. Notes capture the bracketed duration and description with punctuation cleaned.
+- "Then went to mess" → no time; local mode leaves time as em dash (—) or aligns to a nearby known time if obvious. Gemini mode often infers a plausible time if context suggests ordering.
+- "Then in room rn at 7 PM" → single time detected (7 PM). Normalized to 7:00 PM.
+
+Output (appended to the note):
 
 ```markdown
 ---
-### Daily Summary
+### 🧾 Daily Summary
 
-| Time        | Activity         | Notes                     |
-|-------------|------------------|---------------------------|
-| 7:30 AM     | Wake Up          | -                         |
-| 8:00–3:30 PM| Classes          | -                         |
-| 3:30–5:20 PM| Library          | Arranged ARC browser tabs |
-| 5:30 PM     | Dinner (Mess)    | -                         |
-| 7:00 PM     | In Room          | -                         |
+| Time         | Activity              | Notes                                                  |
+|--------------|-----------------------|--------------------------------------------------------|
+| 7:30 AM      | Wake Up               | Started the day                                        |
+| 8:00–3:30 PM | Classes               | Attended DSA, DBMS, ADA, AP, and Maths lectures        |
+| 3:30–5:20 PM | Library               | Reviewed notes, organized tabs, and self-studied       |
+| 5:20–5:45 PM | Break                 | Walked to mess, short rest                             |
+| 5:45–6:30 PM | Dinner (Mess)         | Had evening meal with peers                            |
+| 6:30–7:00 PM | Return to Room        | Walked back, light phone usage                         |
+| 7:00 PM      | In Room               | Unwinding; journaling, light tasks, or browsing        |
 ```
+
+Row‑by‑row notes:
+- Times are normalized to 12‑hour format with AM/PM.
+- Ranges are rendered as start–end; where the start is missing, local mode uses a conservative default; Gemini may infer from context.
+- Bracketed durations (e.g., `[2hrs]`) are used to compute a missing start if an end time is present; otherwise, they are moved into Notes.
+- Exclamations and repeated punctuation are removed from the Notes column.
 
 ---
 
@@ -123,6 +140,14 @@ Notes:
 
 - Local provider: no network calls; all processing occurs locally.
 - Gemini provider: note content is sent to Google’s API via HTTPS. Your API key is stored locally in your vault. No analytics or telemetry are collected by this plugin.
+
+---
+
+## Troubleshooting
+
+- "Summary failed: HTTP 401/403" → Verify your Gemini API key and that the selected model is available to your key.
+- "Summary failed: HTTP 429/503" → Temporary rate limit or service issue. The plugin retries automatically; try again after a brief wait.
+- Empty output or missing rows → Check that entries contain recognizable times or durations. The local parser is conservative; consider using Gemini for better inference.
 
 ---
 

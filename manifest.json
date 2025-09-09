@@ -1,10 +1,10 @@
 {
 	"id": "daily-summary-gemini",
-	"name": "Daily Summary (Gemini)",
+	"name": "Daywise",
 	"version": "1.0.0",
 	"minAppVersion": "0.15.0",
-	"description": "Generate a tabular daily summary from freeform logs using Google Gemini.",
-	"author": "Dikshant & AI Assistant",
-	"authorUrl": "https://obsidian.md",
+	"description": "Generate a structured daily summary from freeform notes.",
+	"author": "Dikshant Jangra",
+	"authorUrl": "https://github.com/dikshantjangra/",
 	"isDesktopOnly": false
 }
